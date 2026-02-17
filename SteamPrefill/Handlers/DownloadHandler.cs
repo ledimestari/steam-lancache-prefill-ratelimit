@@ -5,6 +5,7 @@
         private readonly IAnsiConsole _ansiConsole;
         private readonly CdnPool _cdnPool;
         private readonly HttpClient _client;
+        private BandwidthLimiter _bandwidthLimiter;
 
         /// <summary>
         /// The URL/IP Address where the Lancache has been detected.
@@ -38,6 +39,10 @@
         public async Task<bool> DownloadQueuedChunksAsync(List<QueuedRequest> queuedRequests, DownloadArguments downloadArgs)
         {
             await InitializeAsync();
+
+            _bandwidthLimiter = downloadArgs.RateLimitMbps.HasValue
+                ? new BandwidthLimiter(downloadArgs.RateLimitMbps.Value)
+                : null;
 
             int retryCount = 0;
             var failedRequests = new ConcurrentBag<QueuedRequest>();
@@ -108,8 +113,13 @@
 
                     // Don't save the data anywhere, so we don't have to waste time writing it to disk.
                     var buffer = new byte[4096];
-                    while (await responseStream.ReadAsync(buffer, cts.Token) != 0)
+                    int bytesRead;
+                    while ((bytesRead = await responseStream.ReadAsync(buffer, cts.Token)) != 0)
                     {
+                        if (_bandwidthLimiter != null)
+                        {
+                            await _bandwidthLimiter.ConsumeAsync(bytesRead, cts.Token);
+                        }
                     }
                 }
                 catch (Exception e)

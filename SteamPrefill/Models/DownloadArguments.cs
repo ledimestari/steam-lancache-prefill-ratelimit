@@ -40,6 +40,13 @@
         /// </summary>
         public List<OperatingSystem> OperatingSystems { get; init; } = new List<OperatingSystem> { OperatingSystem.Windows };
 
+        /// <summary>
+        /// When specified, limits the aggregate download bandwidth across all concurrent tasks
+        /// to the given rate in megabits per second (Mbps).
+        /// When null, no rate limiting is applied.
+        /// </summary>
+        public double? RateLimitMbps { get; init; }
+
         public Architecture Architecture { get; init; } = Architecture.x64;
         public Language Language { get; init; } = Language.English;
     }

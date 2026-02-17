@@ -44,6 +44,11 @@ namespace SteamPrefill.CliCommands
             Converter = typeof(TransferSpeedUnitConverter))]
         public TransferSpeedUnit TransferSpeedUnit { get; init; } = TransferSpeedUnit.Bits;
 
+        [CommandOption("rate-limit",
+            Description = "Limits the maximum download speed in megabits per second (Mbps).  " +
+                          "For example, '100' would limit downloads to 100 Mbps.")]
+        public double? RateLimitMbps { get; init; }
+
         [CommandOption("no-ansi",
             Description = "Application output will be in plain text.  " +
                           "Should only be used if terminal does not support Ansi Escape sequences, or when redirecting output to a file.",
@@ -61,11 +66,18 @@ namespace SteamPrefill.CliCommands
 
             await UpdateChecker.CheckForUpdatesAsync(typeof(Program), "tpill90/steam-lancache-prefill", AppConfig.TempDir);
 
+            if (RateLimitMbps.HasValue && RateLimitMbps.Value <= 0)
+            {
+                _ansiConsole.Markup(Red($"Value for {LightYellow("--rate-limit")} must be greater than 0"));
+                throw new CommandException(".", 1, true);
+            }
+
             var downloadArgs = new DownloadArguments
             {
                 Force = Force ?? false,
                 TransferSpeedUnit = TransferSpeedUnit,
-                OperatingSystems = OperatingSystems.ToList()
+                OperatingSystems = OperatingSystems.ToList(),
+                RateLimitMbps = RateLimitMbps
             };
 
             using var steamManager = new SteamManager(_ansiConsole, downloadArgs);

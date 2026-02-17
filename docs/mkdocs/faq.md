@@ -62,9 +62,9 @@ While it would certainly be helpful (and cheaper!) to prefill apps that you don'
 
 You may want to limit the download speed of **{{prefill_name}}** to prevent it from potentially saturating your entire connection, causing other devices to suffer from massive latency and poor speeds. This issue is known as bufferbloat, and more detailed information on the issue can be found here: [What is bufferbloat?](https://waveform.com/tools/bufferbloat)
 
-**{{prefill_name}}** does not currently contain any functionality to limit its own download speed, and due to the way that downloads are implemented will likely never be able to throttle its own download speed. Additionally, even if **{{prefill_name}}** was able to throttle itself, the same issue would persist with downloads through **{{gaming_service_name}}**.
+You can limit the download speed of **{{prefill_name}}** by using the `--rate-limit` flag, which accepts a value in megabits per second (Mbps). For example, `--rate-limit 100` would limit downloads to 100 Mbps. Note that this only limits **{{prefill_name}}** itself; downloads through the **{{gaming_service_name}}** client are not affected.
 
-One method to limit bandwidth would be to configure _Quality of Service (QOS)_ on your router, limiting bandwidth to the Lancache server, or by prioritizing other network traffic. A general overview of QOS can be found here : [Beginners guide to QOS](https://www.howtogeek.com/75660/the-beginners-guide-to-qos-on-your-router/)
+Alternatively, you can configure _Quality of Service (QOS)_ on your router to limit bandwidth to the Lancache server, or to prioritize other network traffic. A general overview of QOS can be found here : [Beginners guide to QOS](https://www.howtogeek.com/75660/the-beginners-guide-to-qos-on-your-router/)
 
 For more brand specific guides (non-exhaustive), see :
 
