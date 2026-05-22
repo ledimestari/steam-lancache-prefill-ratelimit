@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64;osx-x64</RuntimeIdentifiers>
+    <OutputType>Exe</OutputType>
+
+    <AssemblyName>SteamPrefill</AssemblyName>
+    <RootNamespace>SteamPrefill</RootNamespace>
+    <VersionPrefix>3.4.2</VersionPrefix>
+    <Authors>tpill90</Authors>
+
+    <!-- Code analysis settings -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <Features>strict</Features>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <!-- Publish Settings -->
+  <PropertyGroup>
+    <PublishTrimmed>true</PublishTrimmed>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <!-- Reverts back to the default trim mode used by dotnet 6, otherwise CliFx breaks without reflection -->
+    <TrimMode>partial</TrimMode>
+
+    <PublishSingleFile>true</PublishSingleFile>
+
+    <!-- Required to be enabled in order to run this application on Ubuntu Docker images. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- Removes the git commit hash being appended to the version number when publishing..  Ex: v2.3.0+5afde434cfe8472ba36138c4912e7aa08a7a22d0 -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Removes the full file system path from exception stack traces, only shows the file names now -->
+    <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+  </PropertyGroup>
+
+  <!-- Includes Linux update script in publish package -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)'=='linux-x64'">
+    <Content Include="..\scripts\**\update.sh">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Includes Windows update script in publish package -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)'=='win-x64'">
+    <Content Include="..\scripts\**\update.ps1">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- External Packages -->
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="HexMate" Version="0.0.3" />
+    <PackageReference Include="Intellenum" Version="1.0.0-beta.3" />
+    <PackageReference Include="protobuf-net" Version="3.2.30" />
+    <PackageReference Include="Spectre.Console" Version="0.49.2-preview.0.67" />
+    <PackageReference Include="SteamKit2" Version="3.0.0-Beta.5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+    <PackageReference Include="ThisAssembly.AssemblyInfo" Version="1.2.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <!-- Custom CliFx build, allows for top level exception handling in application code, instead of CliFx swallowing all exceptions -->
+    <Reference Include="CliFx">
+      <HintPath>..\LancachePrefill.Common\lib\CliFx.dll</HintPath>
+    </Reference>
+
+    <!-- Debugging Packages -->
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+
+    <!-- Analyzers -->
+    <PackageReference Include="AsyncFixer" Version="1.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ErrorProne.NET.Structs" Version="0.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <!-- Required definitions in order for Microsoft.CodeAnalysis.BannedApiAnalyzers to work -->
+    <AdditionalFiles Include="..\LancachePrefill.Common\BannedSymbols.txt" Link="Properties\BannedSymbols.txt" />
+
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Spectre.Console.Analyzer" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LancachePrefill.Common\dotnet\LancachePrefill.Common.csproj" />
+  </ItemGroup>
+
+</Project>
