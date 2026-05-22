@@ -1,1 +1,0 @@
-scp tim@192.168.1.222:/mnt/temp/lancache/logs/access.log access.log
