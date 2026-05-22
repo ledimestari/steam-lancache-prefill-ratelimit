@@ -1,26 +1,36 @@
+# =========================
+# Build stage
+# =========================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+# Copy project files first (better layer caching)
+COPY . .
+
+# Restore + publish
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# =========================
+# Runtime stage
+# =========================
 FROM ubuntu:20.04
-LABEL maintainers="tpilius@gmail.com;kirbo@kirbo-designs.com"
 
-RUN \
-        apt update \
-        && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-                ca-certificates \
-                libncursesw5 \
-                locales \
-                tzdata \
-        && sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen \
-        && dpkg-reconfigure --frontend=noninteractive locales \
-        && update-locale LANG=en_US.UTF-8 \
-        && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-ENV \
-        LANG=en_US.UTF-8 \
-        LANGUAGE=en_US:en \
-        LC_ALL=en_US.UTF-8 \
-        TERM=xterm-256color
+RUN apt update && apt install -y \
+    ca-certificates \
+    libncursesw5 \
+    locales \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/bin
-COPY  /publish/SteamPrefill /
-RUN chmod +x /SteamPrefill
+WORKDIR /app
 
-ENTRYPOINT [ "/SteamPrefill" ]
+# Copy compiled output from build stage
+COPY --from=build /app/publish .
+
+# Ensure binary is executable (if native executable is produced)
+RUN chmod +x SteamPrefill || true
+
+ENTRYPOINT ["./SteamPrefill"]
