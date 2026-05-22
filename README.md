@@ -1,3 +1,8 @@
+> [!NOTE]
+> This fork is only to create a release for https://github.com/Yimura/steam-lancache-prefill, which is a fork of https://github.com/tpill90/steam-lancache-prefill
+>
+> This release has the functionality to rate-limit steam prefill, which the original project lacks.
+
 # steam-lancache-prefill
 
 [![](https://dcbadge.vercel.app/api/server/BKnBS4u?style=for-the-badge)](https://discord.com/invite/BKnBS4u)
