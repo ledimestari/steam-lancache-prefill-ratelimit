@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     curl jq unzip wget \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/bin
+WORKDIR /app
 
 COPY --from=build /out .
 
