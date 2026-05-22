@@ -30,7 +30,7 @@ This option leverages debug functionality built into https://github.com/tpill90/
 
 `SteamPrefill/Models/DownloadArguments.cs` contains an option `private int _maxConcurrentRequests = 30;` which was meant for debugging, but by setting this to a low value of 2, I managed to limit the download speed a good amount. 
 
-Benefit over the first option is that the already downloaded files get checked very fast. In my use case the already existing files get checked at a rate of GB/s, while the download itself settles around 20 mbps.
+Benefit over the first option is that the already downloaded files get checked very fast. In my use case the already existing files get checked at a rate of GB/s, while the download itself settles around 25 Mbit/s.
 
 Clone and compile: 
 ```
