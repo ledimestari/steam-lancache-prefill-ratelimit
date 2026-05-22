@@ -2,7 +2,7 @@
 {
     public sealed class DownloadArguments
     {
-        private int _maxConcurrentRequests = 30;
+        private int _maxConcurrentRequests = 3;
 
         /// <summary>
         /// When set to true, always run the download, regardless of if the app has been previously downloaded.
