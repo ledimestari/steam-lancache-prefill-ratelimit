@@ -45,5 +45,6 @@ Run without any extra flags.
 docker run -it --rm --name SteamPrefill -e PUID=0 -e PGID=0 --net=host --volume /home/ubuntu/docker/SteamPrefill/config/SteamPrefill:/app/Config steam-prefill-ratelimit prefill
 ```
 
+---
 
 Refer README_old.md for the rest of the readme from the original project.
