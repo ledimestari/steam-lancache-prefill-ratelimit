@@ -32,6 +32,8 @@ This option leverages debug functionality built into https://github.com/tpill90/
 
 Benefit over the first option is that the already downloaded files get checked very fast. In my use case the already existing files get checked at a rate of GB/s, while the download itself settles around 25 Mbit/s.
 
+The downside using this method is that you don't actually get to set an actual ratelimit, you just set the concurrent connections low and hope the download speed stays lower too.
+
 Clone and compile: 
 ```
 git clone --recurse-submodules https://github.com/ledimestari/steam-lancache-prefill.git && \
