@@ -6,7 +6,7 @@ This repository was my solution to limit the bandwidth of steamprefill and conta
 
 ## Option 1: master branch 
 
-Hard rate limiting functionality from from https://github.com/Yimura/steam-lancache-prefill
+Hard rate limiting functionality from https://github.com/Yimura/steam-lancache-prefill
 
 This solution sets a hard limit for how fast the prefill downloads files.
 
