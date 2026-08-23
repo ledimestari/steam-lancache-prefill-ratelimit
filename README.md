@@ -26,6 +26,8 @@ docker run -it --rm --name SteamPrefill -e PUID=0 -e PGID=0 --net=host --volume 
 
 ## Option 2: concurrent-limited branch
 
+I personally have used this option and it has worked very well.
+
 This option leverages debug functionality built into https://github.com/tpill90/steam-lancache-prefill
 
 `SteamPrefill/Models/DownloadArguments.cs` contains an option `private int _maxConcurrentRequests = 30;` which was meant for debugging, but by setting this to a low value of 2, I managed to limit the download speed a good amount. 
